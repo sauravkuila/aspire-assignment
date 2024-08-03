@@ -3,6 +3,7 @@ package api
 import (
 	"aspire-assignment/pkg/config"
 	"aspire-assignment/pkg/db"
+	e "aspire-assignment/pkg/errors"
 	"aspire-assignment/pkg/service"
 	"context"
 	"fmt"
@@ -20,10 +21,13 @@ var databases []*gorm.DB
 func Start() error {
 	ctx = context.Background()
 
+	//error initialization
+	e.ErrorInit()
+
 	databases = make([]*gorm.DB, 0)
 	postgresConn, err := db.PsqlConnect()
 	if err != nil {
-		log.Printf("Failed to connect psql database", err.Error())
+		log.Printf("Failed to connect psql database. Error:%s", err.Error())
 		return err
 	}
 
@@ -59,7 +63,7 @@ func ShutdownRouter() {
 	if err := srv.Shutdown(timeoutCtx); err != nil {
 		log.Fatalf("Server forced to shutdown. Error: %s", err.Error())
 	}
-	// catching ctx.Done(). timeout of 5 seconds.
+	// catching ctx.Done(). timeout of 2 seconds.
 	select {
 	case <-timeoutCtx.Done():
 		log.Println("timeout of 2 seconds.")

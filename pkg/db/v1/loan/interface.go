@@ -10,7 +10,10 @@ type loanDb struct {
 }
 
 type DbLoanInterface interface {
-	FuncLoanSample(*gin.Context) error
+	CreateLoan(*gin.Context, int64, float64, int64) (int64, error)
+	ModifyLoan(*gin.Context, int64, int64, float64, int64) (int64, error)
+	CancelLoan(*gin.Context, int64, int64) (int64, error)
+	GetAllLoansForAgainstUser(*gin.Context, int64) ([]LoanDetails, error)
 }
 
 func NewLoanDbObject(db *gorm.DB) DbLoanInterface {

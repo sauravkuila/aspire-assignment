@@ -11,7 +11,10 @@ type loanService struct {
 }
 
 type LoanInterface interface {
-	FuncLoanServiceSample(*gin.Context)
+	CreateLoan(*gin.Context)
+	ModifyLoan(*gin.Context)
+	CancelLoan(*gin.Context)
+	GetLoans(*gin.Context)
 }
 
 func NewLoanService(db v1.V1DBLayer) LoanInterface {

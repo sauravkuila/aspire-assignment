@@ -19,14 +19,14 @@ func getRouter(obj service.ServiceGroupLayer) *gin.Engine {
 		//loan group
 		loanGroup := v1Group.Group("loan")
 		{
-			// loanGroup.POST("", v1.ApplyLoan)
-			// loanGroup.PUT("", v1.ApplyLoan)                         //update the loan requested amount
-			// loanGroup.DELETE("", v1.ApplyLoan)                      //cancel the loan requested amount
+			loanGroup.POST("", obj.GetV1Service().CreateLoan)    //create loan for a user id
+			loanGroup.PUT("", obj.GetV1Service().ModifyLoan)     //update the loan requested amount
+			loanGroup.DELETE("", obj.GetV1Service().CancelLoan)  //cancel the loan requested amount
+			loanGroup.GET("status", obj.GetV1Service().GetLoans) // fetch loans against user
 			// loanGroup.PUT("offer", v1.ApplyLoan)                    //pre-approved offers based on monthly salary or bank account balance
 			// loanGroup.GET("status", v1.GetLoanStatus)               //approved, rejected, pending amount
 			// loanGroup.GET("transactions", v1.GetPaymentTransaction) //transactions against the loan
 			// loanGroup.POST("transact", v1.ProcessLoanPayment)       //payments made
-			loanGroup.GET("test", obj.GetV1Service().FuncLoanServiceSample)
 		}
 
 		//user group

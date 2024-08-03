@@ -8,7 +8,7 @@ DROP TABLE IF EXISTS installment;
 
 --create types
 CREATE TYPE UserTypes AS ENUM('USER','APPROVER');
-CREATE TYPE LoanStatus AS ENUM('PENDING','APPROVED','INFORCE','REJECTED');
+CREATE TYPE LoanStatus AS ENUM('PENDING','APPROVED','INFORCE','REJECTED','CANCELLED','SETTLED');
 CREATE TYPE LoanTransactionStatus AS ENUM('PENDING','PAID','CANCELLED');
 
 -- create a function for timestamp

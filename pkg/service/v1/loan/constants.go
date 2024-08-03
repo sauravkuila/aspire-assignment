@@ -1,0 +1,18 @@
+package loan
+
+// loan status
+const (
+	LOAN_PENDING   = "PENDING"
+	LOAN_APPROVED  = "APPROVED"
+	LOAN_INFORCE   = "INFORCE"
+	LOAN_REJECTED  = "REJECTED"
+	LOAN_CANCELLED = "CANCELLED"
+	LOAN_SETTLED   = "SETTLED"
+)
+
+// loan txn status
+const (
+	TXN_PENDING   = "PENDING"
+	TXN_PAID      = "PAID"
+	TXN_CANCELLED = "CANCELLED"
+)
