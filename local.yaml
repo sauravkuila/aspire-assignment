@@ -12,3 +12,5 @@ databases:
     db: aspire
     sslmode: disable
     connect_timeout: 10
+auth:
+  key: f66b73f12706b9d36e9940525c21654b89d2f7f5921fd9e96bbf0e0e45168909
