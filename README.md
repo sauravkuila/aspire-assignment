@@ -96,6 +96,17 @@ The postman collection in ```releases/aspire-assignment.postman_collection.json`
 ### Usage
 * Download the relevant executable from `releases` folder and run
 * Download the `local.yaml` and edit the database connection settings
+```
+databases:
+  postgres:
+    host: 127.0.0.1     #db connection ip
+    port: 5432          #db connection port
+    user: postgres      #db username
+    password: postgres  #db password
+    db: aspire          #db name
+    sslmode: disable
+    connect_timeout: 10
+```
 * Run the executable ```./aspire```(mac) or ```aspire.exe```(windows)
     * the console should show a message ```starting router``` which means that the app has successfully started
     * ensure to download the `local.yaml` and keep it in the same folder as the executable
