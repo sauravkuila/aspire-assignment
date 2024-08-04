@@ -68,7 +68,7 @@ CREATE DATABASE aspire;
 * run the db schema available in ```pkg/db/sql/create.sql``` path
 * ensure the db details are updated correctly in ```local.yaml``` file in ```releases``` folder
 * keep the ```local.yaml``` in the same folder as the executable
-* go version 1.20 and above is needed to Build the project
+* go version 1.22 and above is needed to Build the project
     * clone the project to folder ```aspire-assignment```
     * run command ```go build -o aspire .``` for mac/linux
     * run command ```go build -o aspire.exe .``` for windows
