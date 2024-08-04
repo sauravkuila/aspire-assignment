@@ -1,6 +1,7 @@
 package api
 
 import (
+	"aspire-assignment/pkg/auth"
 	"aspire-assignment/pkg/service"
 
 	"github.com/gin-gonic/gin"
@@ -16,9 +17,11 @@ func getRouter(obj service.ServiceGroupLayer) *gin.Engine {
 	//cred APIs
 	credGroup := router.Group("cred")
 	{
-		// credGroup.POST("signup", obj.GetV1Service()) //signup as customer or admin
-		credGroup.POST("login")
+		credGroup.POST("signup", obj.GetV1Service().UserSignup) //signup as customer or admin
+		credGroup.POST("login", obj.GetV1Service().UserLogin)   //login for cutomer / admin
 	}
+
+	router.Use(auth.AuthMiddleware())
 
 	//v1 APIs
 	v1Group := router.Group("v1")
@@ -40,7 +43,6 @@ func getRouter(obj service.ServiceGroupLayer) *gin.Engine {
 		{
 			adminGroup.GET("applications", obj.GetV1Service().GetPendingLoans)         //fetch all applications which are unapproved
 			adminGroup.POST("update", obj.GetV1Service().ApproveRejectLoanApplication) //update the loan status for assigned applications
-			adminGroup.GET("test", obj.GetV1Service().FuncUserMgtServiceSample)
 			// adminGroup.GET("assign", v1.GetPendingLoans)       //assign a loan application to an approver
 		}
 	}

@@ -10,7 +10,8 @@ type userMgtDb struct {
 }
 
 type DbUserManagementInterface interface {
-	FuncUserMgtSample(*gin.Context) error
+	AddUser(*gin.Context, UserDetails) (int64, error)
+	GetUserByUsername(*gin.Context, string) (UserDetails, error)
 }
 
 func NewLoanDbObject(db *gorm.DB) DbUserManagementInterface {

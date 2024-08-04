@@ -12,10 +12,11 @@ var (
 
 const (
 	USERID        = "userId"
-	REQUESTID     = "requestID"
+	USERTYPE      = "userType"
+	USERNAME      = "username"
 	AUTHORIZATION = "Authorization"
-	XLENGTH       = "X-Length"
-	SCOPE         = "scope"
+	ADMIN         = "ADMIN"
+	CUSTOMER      = "CUSTOMER"
 )
 
 // Init is an exported method that takes the environment starts the viper

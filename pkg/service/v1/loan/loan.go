@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 
+	"aspire-assignment/pkg/config"
 	e "aspire-assignment/pkg/errors"
 
 	"github.com/gin-gonic/gin"
@@ -25,6 +26,7 @@ func (obj *loanService) CreateLoan(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//make a loan entry in db
 	loanId, err := obj.dbObj.CreateLoan(c, request.UserId, request.Amount, request.Tenure)
@@ -61,6 +63,7 @@ func (obj *loanService) ModifyLoan(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//modify the loan if the loan is pending
 	loanId, err := obj.dbObj.ModifyLoan(c, request.UserId, request.LoanId, request.Amount, request.Tenure)
@@ -104,6 +107,7 @@ func (obj *loanService) CancelLoan(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//cancel the loan if the loan is pending
 	loanId, err := obj.dbObj.CancelLoan(c, request.UserId, request.LoanId)
@@ -146,6 +150,7 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//TODO: add custom status like only loans which are pending or cancelled. add a query scan param
 

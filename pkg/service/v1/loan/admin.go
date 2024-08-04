@@ -1,6 +1,7 @@
 package loan
 
 import (
+	"aspire-assignment/pkg/config"
 	e "aspire-assignment/pkg/errors"
 	"log"
 	"net/http"
@@ -20,6 +21,7 @@ func (obj *loanService) GetPendingLoans(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//check if the user is an admin and fetch only pending loans
 	//todo: implement JWT
@@ -68,6 +70,7 @@ func (obj *loanService) ApproveRejectLoanApplication(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//check loan details to create transactions
 	loanDetail, err := obj.dbObj.FetchLoanDetails(c, request.LoanId)

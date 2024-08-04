@@ -13,16 +13,17 @@ type Error struct {
 var ErrorInfo map[string]*Error
 
 const (
-	NoDataFound  string = "NoDataFound"
-	BadRequest   string = "BadRequest"
-	GetDBError   string = "GetDBError"
-	AddDBError   string = "AddDBError"
-	DelDBError   string = "DelDBError"
-	DefaultError string = "DefaultError"
-	Unauthorized string = "Unauthorized"
-	DbConnError  string = "DbConnError"
-	DbError      string = "DBError"
-	UnAuthorized string = "UnAuthorized"
+	NoDataFound     string = "NoDataFound"
+	BadRequest      string = "BadRequest"
+	GetDBError      string = "GetDBError"
+	AddDBError      string = "AddDBError"
+	DelDBError      string = "DelDBError"
+	DefaultError    string = "DefaultError"
+	Unauthorized    string = "Unauthorized"
+	DbConnError     string = "DbConnError"
+	DbError         string = "DBError"
+	UnAuthorized    string = "UnAuthorized"
+	ConversionError string = "ConversionError"
 )
 
 func ErrorInit() {
@@ -34,6 +35,9 @@ func ErrorInit() {
 	ErrorInfo[AddDBError] = &Error{ErrName: DbError, Description: "Failed to update/insert data into system", Code: 1003}
 	ErrorInfo[DelDBError] = &Error{ErrName: DbError, Description: "Failed to Delete the data from system", Code: 1004}
 	ErrorInfo[BadRequest] = &Error{ErrName: BadRequest, Description: "Missing or Invalid input arguments", Code: 1005}
+	ErrorInfo[ConversionError] = &Error{ErrName: ConversionError, Description: "Conversion Failed", Code: 1006}
+	ErrorInfo[DefaultError] = &Error{ErrName: DefaultError, Description: "Something went wrong", Code: 1007}
+	ErrorInfo[UnAuthorized] = &Error{ErrName: UnAuthorized, Description: "UnAuthorized", Code: 1008}
 
 	log.Println("ErrorInit successful")
 }

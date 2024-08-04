@@ -5,7 +5,7 @@ import (
 )
 
 type CreateLoanRequest struct {
-	UserId int64   `json:"userId" binding:"required"`
+	UserId int64   `json:"-"`
 	Amount float64 `json:"amount" binding:"required"`
 	Tenure int64   `json:"tenure" binding:"required"`
 }
@@ -39,7 +39,7 @@ type InstallmentDetails struct {
 }
 
 type ModifyLoanRequest struct {
-	UserId int64   `json:"userId" binding:"required"`
+	UserId int64   `json:"-"`
 	LoanId int64   `json:"loanId" binding:"required"`
 	Amount float64 `json:"amount" binding:"required"`
 	Tenure int64   `json:"tenure" binding:"required"`
@@ -53,7 +53,7 @@ type ModifyLoanResponse struct {
 }
 
 type CancelLoanRequest struct {
-	UserId int64 `json:"userId" binding:"required"`
+	UserId int64 `json:"-"`
 	LoanId int64 `json:"loanId" binding:"required"`
 }
 
@@ -65,7 +65,7 @@ type CancelLoanResponse struct {
 }
 
 type GetLoanRequest struct {
-	UserId int64 `form:"userId" binding:"required"`
+	UserId int64 `form:"-"`
 }
 
 type GetLoanResponse struct {
@@ -76,7 +76,7 @@ type GetLoanResponse struct {
 }
 
 type PendingLoanRequest struct {
-	UserId int64 `form:"userId" binding:"required"`
+	UserId int64 `form:"-"`
 }
 
 type PendingLoanResponse struct {
@@ -87,7 +87,7 @@ type PendingLoanResponse struct {
 }
 
 type ApproveRejectLoanApplicationRequest struct {
-	UserId   int64  `json:"userId" binding:"required"`
+	UserId   int64  `json:"-"`
 	LoanId   int64  `json:"loanId" binding:"required"`
 	Approval string `json:"approval" binding:"required,oneof=APPROVE REJECT"`
 }
@@ -100,7 +100,7 @@ type ApproveRejectLoanApplicationResponse struct {
 }
 
 type GetLoanDetailRequest struct {
-	UserId int64 `form:"userId" binding:"required"`
+	UserId int64 `form:"-"`
 	LoanId int64 `form:"loanId" binding:"required"`
 }
 
@@ -121,7 +121,7 @@ type GetLoanDetail struct {
 }
 
 type ProcessLoanPaymentRequest struct {
-	UserId        int64   `json:"userId" binding:"required"`
+	UserId        int64   `json:"-"`
 	LoanId        int64   `json:"loanId" binding:"required"`
 	Amount        float64 `json:"amount" binding:"required"`
 	TransactionId string  `json:"transactionId" binding:"required"`

@@ -23,7 +23,8 @@ $$ LANGUAGE plpgsql;
 --create tables
 CREATE TABLE user_detail(
    id serial,
-   user_name text not null,
+   user_name text not null unique,
+   password text not null,
    user_type UserTypes not null,
    email text not null, 
    mobile text not null,

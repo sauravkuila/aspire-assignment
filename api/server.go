@@ -1,6 +1,7 @@
 package api
 
 import (
+	"aspire-assignment/pkg/auth"
 	"aspire-assignment/pkg/config"
 	"aspire-assignment/pkg/db"
 	e "aspire-assignment/pkg/errors"
@@ -23,6 +24,9 @@ func Start() error {
 
 	//error initialization
 	e.ErrorInit()
+
+	//init auth
+	auth.InitAuth()
 
 	databases = make([]*gorm.DB, 0)
 	postgresConn, err := db.PsqlConnect()

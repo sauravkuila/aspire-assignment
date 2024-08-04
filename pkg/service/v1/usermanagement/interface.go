@@ -11,7 +11,8 @@ type userMgtService struct {
 }
 
 type UserManagementInterface interface {
-	FuncUserMgtServiceSample(*gin.Context)
+	UserSignup(*gin.Context)
+	UserLogin(*gin.Context)
 }
 
 func NewUserManagementService(db v1.V1DBLayer) UserManagementInterface {

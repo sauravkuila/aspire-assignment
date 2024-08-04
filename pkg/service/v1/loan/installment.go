@@ -1,6 +1,7 @@
 package loan
 
 import (
+	"aspire-assignment/pkg/config"
 	e "aspire-assignment/pkg/errors"
 	"log"
 	"net/http"
@@ -20,6 +21,7 @@ func (obj *loanService) GetInstallments(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	installments, err := obj.dbObj.GetUserLoanInstallments(c, request.UserId, request.LoanId)
 	if err != nil {
@@ -74,6 +76,7 @@ func (obj *loanService) ProcessLoanPayment(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
+	request.UserId = c.GetInt64(config.USERID)
 
 	//scope: validate transaction id with any service if available
 	//get existing installments and check if payment for an installment is valid
