@@ -294,7 +294,70 @@
 									]
 								}
 							},
-							"response": []
+							"response": [
+								{
+									"name": "v1 - Admin - Approve Loan",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"loanId\":1,\n    \"approval\":\"APPROVE\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/v1/admin/update",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"v1",
+												"admin",
+												"update"
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								},
+								{
+									"name": "v1 - Admin - Reject Loan",
+									"originalRequest": {
+										"method": "POST",
+										"header": [],
+										"body": {
+											"mode": "raw",
+											"raw": "{\n    \"loanId\":1,\n    \"approval\":\"REJECT\"\n}",
+											"options": {
+												"raw": {
+													"language": "json"
+												}
+											}
+										},
+										"url": {
+											"raw": "{{host}}/v1/admin/update",
+											"host": [
+												"{{host}}"
+											],
+											"path": [
+												"v1",
+												"admin",
+												"update"
+											]
+										}
+									},
+									"_postman_previewlanguage": null,
+									"header": null,
+									"cookie": [],
+									"body": null
+								}
+							]
 						}
 					]
 				}
@@ -353,7 +416,7 @@
 						"header": [],
 						"body": {
 							"mode": "raw",
-							"raw": "{\n    \"username\":\"Saurav1\",\n    \"password\":\"pass12345\",\n\t\"type\":\"ADMIN\",\n    \"email\":\"abc@my.com\",\n    \"mobile\":\"+91802134589\"\n}",
+							"raw": "{\n    \"username\":\"Saurav\",\n    \"password\":\"pass12345\",\n\t\"type\":\"ADMIN\",\n    \"email\":\"abc@my.com\",\n    \"mobile\":\"+91802134589\"\n}",
 							"options": {
 								"raw": {
 									"language": "json"
@@ -371,7 +434,68 @@
 							]
 						}
 					},
-					"response": []
+					"response": [
+						{
+							"name": "Cred - Signup - Customer",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"Saurav\",\n    \"password\":\"pass12345\",\n\t\"type\":\"CUSTOMER\",\n    \"email\":\"abc@my.com\",\n    \"mobile\":\"+91802134589\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/cred/signup",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cred",
+										"signup"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						},
+						{
+							"name": "Cred - Signup - Admin",
+							"originalRequest": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"username\":\"Paras\",\n    \"password\":\"pass12345\",\n\t\"type\":\"ADMIN\",\n    \"email\":\"abc@my.com\",\n    \"mobile\":\"+91802134589\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/cred/signup",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"cred",
+										"signup"
+									]
+								}
+							},
+							"_postman_previewlanguage": null,
+							"header": null,
+							"cookie": [],
+							"body": null
+						}
+					]
 				}
 			]
 		},
