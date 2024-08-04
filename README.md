@@ -94,7 +94,7 @@ The postman collection in ```releases/aspire-assignment.postman_collection.json`
 * `POST`   /v1/admin/update          --> approve/reject pending loans. only authenticated admin can reach this
 
 ### Usage
-* Download the relevant executable from `releases` folder and run
+* Download the relevant executable from `releases/macos` or `releases/windows` folder and run
 * Download the `local.yaml` and edit the database connection settings
 ```
 databases:
