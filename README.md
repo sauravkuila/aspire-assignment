@@ -94,6 +94,12 @@ The postman collection in ```releases/aspire-assignment.postman_collection.json`
 * `POST`   /v1/admin/update          --> approve/reject pending loans. only authenticated admin can reach this
 
 ### Usage
+* Download the relevant executable from `releases` folder and run
+* Download the `local.yaml` and edit the database connection settings
+* Run the executable ```./aspire```(mac) or ```aspire.exe```(windows)
+    * the console should show a message ```starting router``` which means that the app has successfully started
+    * ensure to download the `local.yaml` and keep it in the same folder as the executable
+* Import the Postman collection from ```releases/aspire-assignment.postman_collection.json```
 * Signup using `/cred/signup` and create a username and password as a `CUTOMER` or `ADMIN`
 * Login using `/cred/login` and receive a auth token to be used for all loan APIs
 * Apply for a loan using `/v1/loan`
