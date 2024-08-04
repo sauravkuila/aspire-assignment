@@ -7,8 +7,8 @@ DROP TABLE IF EXISTS loan;
 DROP TABLE IF EXISTS installment;
 
 --create types
-CREATE TYPE UserTypes AS ENUM('USER','APPROVER');
-CREATE TYPE LoanStatus AS ENUM('PENDING','APPROVED','INFORCE','REJECTED','CANCELLED','SETTLED');
+CREATE TYPE UserTypes AS ENUM('CUSTOMER','ADMIN');
+CREATE TYPE LoanStatus AS ENUM('PENDING','APPROVED','REJECTED','CANCELLED','PAID');
 CREATE TYPE LoanTransactionStatus AS ENUM('PENDING','PAID','CANCELLED');
 
 -- create a function for timestamp
@@ -23,6 +23,7 @@ $$ LANGUAGE plpgsql;
 --create tables
 CREATE TABLE user_detail(
    id serial,
+   user_name text not null,
    user_type UserTypes not null,
    email text not null, 
    mobile text not null,
@@ -35,7 +36,7 @@ CREATE TABLE user_detail(
 
 CREATE TABLE loan(
     id serial,
-    user_id int,
+    user_id int not null,
     amount float not null,
     installments int not null,
     status LoanStatus not null,
@@ -49,12 +50,13 @@ CREATE TABLE loan(
 
 CREATE TABLE installment(
     id serial,
-    loan_id int,
+    loan_id int not null,
     amount_due float not null,
     amount_paid float default 0,
     status LoanTransactionStatus not null,
     installment_num int not null,
     due_date timestamp not null,
+    transaction_id text,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,
     PRIMARY KEY(id),

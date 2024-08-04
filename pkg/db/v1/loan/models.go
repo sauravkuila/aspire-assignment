@@ -11,3 +11,12 @@ type LoanDetails struct {
 	CreatedAt    sql.NullTime
 	UpdatedAt    sql.NullTime
 }
+
+type UnApprovedLoan struct {
+	LoanId       sql.NullInt64
+	UserName     sql.NullString
+	Amount       sql.NullFloat64
+	Installments sql.NullInt64
+	Status       sql.NullString
+	CreatedAt    sql.NullTime
+}

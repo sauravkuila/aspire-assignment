@@ -15,6 +15,8 @@ type LoanInterface interface {
 	ModifyLoan(*gin.Context)
 	CancelLoan(*gin.Context)
 	GetLoans(*gin.Context)
+	GetPendingLoans(*gin.Context)
+	ApproveRejectLoanApplication(*gin.Context)
 }
 
 func NewLoanService(db v1.V1DBLayer) LoanInterface {

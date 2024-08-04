@@ -136,10 +136,10 @@ func (obj *loanService) CancelLoan(c *gin.Context) {
 
 func (obj *loanService) GetLoans(c *gin.Context) {
 	var (
-		request  getLoanRequest
+		request  GetLoanRequest
 		response GetLoanResponse
 	)
-	if err := c.BindJSON(&request); err != nil {
+	if err := c.BindQuery(&request); err != nil {
 		log.Printf("unable to marshal request. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.BadRequest])
 		response.Message = "failed to fetch loans"
@@ -154,7 +154,7 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 	if err != nil {
 		log.Printf("failed to fetch loans. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
-		response.Message = "failed to fetcg loans"
+		response.Message = "failed to fetch loans"
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}

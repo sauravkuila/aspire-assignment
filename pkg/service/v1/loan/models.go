@@ -19,6 +19,8 @@ type CreateLoanResponse struct {
 
 type LoanDetails struct {
 	LoanId       int64   `json:"loanId"`
+	UserId       int64   `json:"userId,omitempty"`
+	UserName     string  `json:"username,omitempty"`
 	Amount       float64 `json:"amount,omitempty"`
 	Installments int64   `json:"installments,omitempty"`
 	Status       string  `json:"status"`
@@ -51,11 +53,35 @@ type CancelLoanResponse struct {
 	Message string       `json:"message,omitempty"`
 }
 
-type getLoanRequest struct {
-	UserId int64 `json:"userId" binding:"required"`
+type GetLoanRequest struct {
+	UserId int64 `form:"userId" binding:"required"`
 }
 
 type GetLoanResponse struct {
+	Data    []LoanDetails `json:"data,omitempty"`
+	Status  bool          `json:"success"`
+	Errors  []e.Error     `json:"errors,omitempty"`
+	Message string        `json:"message,omitempty"`
+}
+
+type PendingLoanRequest struct {
+	UserId int64 `form:"userId" binding:"required"`
+}
+
+type PendingLoanResponse struct {
+	Data    []LoanDetails `json:"data,omitempty"`
+	Status  bool          `json:"success"`
+	Errors  []e.Error     `json:"errors,omitempty"`
+	Message string        `json:"message,omitempty"`
+}
+
+type ApproveRejectLoanApplicationRequest struct {
+	UserId   int64  `json:"userId" binding:"required"`
+	LoanId   int64  `json:"loanId" binding:"required"`
+	Approval string `json:"approval" binding:"required,oneof=APPROVE REJECT"`
+}
+
+type ApproveRejectLoanApplicationResponse struct {
 	Data    []LoanDetails `json:"data,omitempty"`
 	Status  bool          `json:"success"`
 	Errors  []e.Error     `json:"errors,omitempty"`

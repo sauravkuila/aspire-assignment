@@ -107,3 +107,29 @@ func (obj *loanDb) GetAllLoansForAgainstUser(c *gin.Context, userId int64) ([]Lo
 	}
 	return loans, nil
 }
+
+func (obj *loanDb) FetchLoanDetails(c *gin.Context, loanId int64) (LoanDetails, error) {
+	query := `
+		select 
+			id, amount, installments, status, created_at
+		from
+			loan
+		where
+			id = ?;
+	`
+	var loan LoanDetails
+
+	row := obj.dbObj.WithContext(c).Raw(query, loanId).Row()
+	if row.Err() != nil {
+		log.Printf("failed to fetch loan. Error: %s", row.Err().Error())
+		return loan, row.Err()
+	}
+
+	err := row.Scan(&loan.LoanId, &loan.Amount, &loan.Installments, &loan.Status, &loan.CreatedAt)
+	if err != nil {
+		log.Printf("failed to scan loan. Error:%s", err.Error())
+		return loan, err
+	}
+
+	return loan, nil
+}

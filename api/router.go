@@ -13,6 +13,13 @@ func getRouter(obj service.ServiceGroupLayer) *gin.Engine {
 	// Health check API can be used for the Kubernetes pod health
 	router.GET("/health", obj.Health)
 
+	//cred APIs
+	credGroup := router.Group("cred")
+	{
+		// credGroup.POST("signup", obj.GetV1Service()) //signup as customer or admin
+		credGroup.POST("login")
+	}
+
 	//v1 APIs
 	v1Group := router.Group("v1")
 	{
@@ -22,20 +29,19 @@ func getRouter(obj service.ServiceGroupLayer) *gin.Engine {
 			loanGroup.POST("", obj.GetV1Service().CreateLoan)    //create loan for a user id
 			loanGroup.PUT("", obj.GetV1Service().ModifyLoan)     //update the loan requested amount
 			loanGroup.DELETE("", obj.GetV1Service().CancelLoan)  //cancel the loan requested amount
-			loanGroup.GET("status", obj.GetV1Service().GetLoans) // fetch loans against user
+			loanGroup.GET("status", obj.GetV1Service().GetLoans) // fetch loans against user, approved, rejected, pending amount
 			// loanGroup.PUT("offer", v1.ApplyLoan)                    //pre-approved offers based on monthly salary or bank account balance
-			// loanGroup.GET("status", v1.GetLoanStatus)               //approved, rejected, pending amount
 			// loanGroup.GET("transactions", v1.GetPaymentTransaction) //transactions against the loan
 			// loanGroup.POST("transact", v1.ProcessLoanPayment)       //payments made
 		}
 
-		//user group
-		userGroup := v1Group.Group("user")
+		//admin group
+		adminGroup := v1Group.Group("admin")
 		{
-			// userGroup.GET("applicaitons", v1.GetPendingLoans) //fetch all applications which are unassigned
-			// userGroup.GET("assign", v1.GetPendingLoans)       //assign a loan application to an approver
-			// userGroup.POST("update", v1.UpdateLoanStatus)     //update the loan status for assigned applications
-			userGroup.GET("test", obj.GetV1Service().FuncUserMgtServiceSample)
+			adminGroup.GET("applications", obj.GetV1Service().GetPendingLoans) //fetch all applications which are unapproved
+			// adminGroup.GET("assign", v1.GetPendingLoans)       //assign a loan application to an approver
+			adminGroup.POST("update", obj.GetV1Service().ApproveRejectLoanApplication) //update the loan status for assigned applications
+			adminGroup.GET("test", obj.GetV1Service().FuncUserMgtServiceSample)
 		}
 	}
 
