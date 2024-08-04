@@ -43,12 +43,12 @@ func (obj *loanService) GetPendingLoans(c *gin.Context) {
 	response.Data = make([]LoanDetails, 0)
 	for _, loan := range loans {
 		response.Data = append(response.Data, LoanDetails{
-			LoanId:       loan.LoanId.Int64,
-			UserName:     loan.UserName.String,
-			Amount:       loan.Amount.Float64,
-			Installments: loan.Installments.Int64,
-			Status:       loan.Status.String,
-			CreatedAt:    loan.CreatedAt.Time.Format("2006-01-02 15:04:05"),
+			LoanId:    loan.LoanId.Int64,
+			UserName:  loan.UserName.String,
+			Amount:    loan.Amount.Float64,
+			Tenure:    loan.Installments.Int64,
+			Status:    loan.Status.String,
+			CreatedAt: loan.CreatedAt.Time.Format("2006-01-02 15:04:05"),
 		})
 	}
 	response.Message = "successfully fetched unapproved loans"
@@ -105,9 +105,9 @@ func (obj *loanService) ApproveRejectLoanApplication(c *gin.Context) {
 	}
 
 	//finding installment per week but any other logic for installment can be applied here
-	equalInstallmentAmount := loanDetail.Amount.Float64 / float64(loanDetail.Installments.Int64)
+	equalInstallmentAmount := loanDetail.Amount.Float64 / float64(loanDetail.Tenure.Int64)
 	//update and insert transactions
-	err = obj.dbObj.UpdateAndInsertInstallments(c, request.LoanId, equalInstallmentAmount, loanDetail.Installments.Int64)
+	err = obj.dbObj.UpdateAndInsertInstallments(c, request.LoanId, equalInstallmentAmount, loanDetail.Tenure.Int64)
 	if err != nil {
 		log.Printf("failed to prepare loan installments. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])

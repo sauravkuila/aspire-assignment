@@ -38,7 +38,7 @@ CREATE TABLE loan(
     id serial,
     user_id int not null,
     amount float not null,
-    installments int not null,
+    tenure int not null,
     status LoanStatus not null,
     created_at timestamp DEFAULT CURRENT_TIMESTAMP,
     updated_at timestamp DEFAULT CURRENT_TIMESTAMP,

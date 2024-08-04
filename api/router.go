@@ -31,7 +31,7 @@ func getRouter(obj service.ServiceGroupLayer) *gin.Engine {
 			loanGroup.DELETE("", obj.GetV1Service().CancelLoan)               //cancel the loan requested amount
 			loanGroup.GET("status", obj.GetV1Service().GetLoans)              // fetch loans against user, approved, rejected, pending amount
 			loanGroup.GET("installments", obj.GetV1Service().GetInstallments) //transactions against the loan
-			loanGroup.POST("transact", obj.GetV1Service().ProcessLoanPayment) //payments made
+			loanGroup.POST("repay", obj.GetV1Service().ProcessLoanPayment)    //payments made
 			// loanGroup.PUT("offer", v1.ApplyLoan)                    //pre-approved offers based on monthly salary or bank account balance
 		}
 

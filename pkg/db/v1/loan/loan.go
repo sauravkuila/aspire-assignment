@@ -10,7 +10,7 @@ import (
 func (obj *loanDb) CreateLoan(c *gin.Context, userId int64, amount float64, installments int64) (int64, error) {
 	query := `
 			insert into
-				loan(user_id, amount, installments, status)
+				loan(user_id, amount, tenure, status)
 			values 
 				(?,?,?,'PENDING')
 			returning 
@@ -41,7 +41,7 @@ func (obj *loanDb) ModifyLoan(c *gin.Context, userId int64, loanId int64, amount
 				loan
 			set
 				amount = ?,
-				installments = ?
+				tenure = ?
 			where
 				id = ?
 				and user_id = ?
@@ -83,7 +83,7 @@ func (obj *loanDb) CancelLoan(c *gin.Context, userId int64, loanId int64) (int64
 func (obj *loanDb) GetUserLoans(c *gin.Context, userId int64) ([]LoanDetails, error) {
 	query := `
 		select 
-			id, amount, installments, status, created_at
+			id, amount, tenure, status, created_at
 		from
 			loan
 		where
@@ -98,7 +98,7 @@ func (obj *loanDb) GetUserLoans(c *gin.Context, userId int64) ([]LoanDetails, er
 	loans := make([]LoanDetails, 0)
 	for rows.Next() {
 		var loan LoanDetails
-		err := rows.Scan(&loan.LoanId, &loan.Amount, &loan.Installments, &loan.Status, &loan.CreatedAt)
+		err := rows.Scan(&loan.LoanId, &loan.Amount, &loan.Tenure, &loan.Status, &loan.CreatedAt)
 		if err != nil {
 			log.Printf("failed to scan loan. Error:%s", err.Error())
 			return nil, err
@@ -111,7 +111,7 @@ func (obj *loanDb) GetUserLoans(c *gin.Context, userId int64) ([]LoanDetails, er
 func (obj *loanDb) FetchLoanDetails(c *gin.Context, loanId int64) (LoanDetails, error) {
 	query := `
 		select 
-			id, amount, installments, status, created_at
+			id, amount, tenure, status, created_at
 		from
 			loan
 		where
@@ -125,7 +125,7 @@ func (obj *loanDb) FetchLoanDetails(c *gin.Context, loanId int64) (LoanDetails, 
 		return loan, row.Err()
 	}
 
-	err := row.Scan(&loan.LoanId, &loan.Amount, &loan.Installments, &loan.Status, &loan.CreatedAt)
+	err := row.Scan(&loan.LoanId, &loan.Amount, &loan.Tenure, &loan.Status, &loan.CreatedAt)
 	if err != nil {
 		log.Printf("failed to scan loan. Error:%s", err.Error())
 		return loan, err

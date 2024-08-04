@@ -27,7 +27,7 @@ func (obj *loanService) CreateLoan(c *gin.Context) {
 	}
 
 	//make a loan entry in db
-	loanId, err := obj.dbObj.CreateLoan(c, request.UserId, request.Amount, request.Installments)
+	loanId, err := obj.dbObj.CreateLoan(c, request.UserId, request.Amount, request.Tenure)
 	if err != nil {
 		log.Printf("failed to create a loan. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
@@ -37,10 +37,10 @@ func (obj *loanService) CreateLoan(c *gin.Context) {
 	}
 
 	loanDetail := LoanDetails{
-		LoanId:       loanId,
-		Amount:       request.Amount,
-		Installments: request.Installments,
-		Status:       LOAN_PENDING,
+		LoanId: loanId,
+		Amount: request.Amount,
+		Tenure: request.Tenure,
+		Status: LOAN_PENDING,
 	}
 	response.Status = true
 	response.Data = &loanDetail
@@ -63,7 +63,7 @@ func (obj *loanService) ModifyLoan(c *gin.Context) {
 	}
 
 	//modify the loan if the loan is pending
-	loanId, err := obj.dbObj.ModifyLoan(c, request.UserId, request.LoanId, request.Amount, request.Installments)
+	loanId, err := obj.dbObj.ModifyLoan(c, request.UserId, request.LoanId, request.Amount, request.Tenure)
 	if err != nil {
 		log.Printf("failed to modify a loan. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
@@ -81,10 +81,10 @@ func (obj *loanService) ModifyLoan(c *gin.Context) {
 	}
 
 	loanDetail := LoanDetails{
-		LoanId:       loanId,
-		Amount:       request.Amount,
-		Installments: request.Installments,
-		Status:       LOAN_PENDING,
+		LoanId: loanId,
+		Amount: request.Amount,
+		Tenure: request.Tenure,
+		Status: LOAN_PENDING,
 	}
 	response.Status = true
 	response.Data = &loanDetail
@@ -170,11 +170,11 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 	response.Data = make([]LoanDetails, 0)
 	for _, loan := range loans {
 		response.Data = append(response.Data, LoanDetails{
-			LoanId:       loan.LoanId.Int64,
-			Amount:       loan.Amount.Float64,
-			Installments: loan.Installments.Int64,
-			Status:       loan.Status.String,
-			CreatedAt:    loan.CreatedAt.Time.Format("2006-01-02 15:04:05"),
+			LoanId:    loan.LoanId.Int64,
+			Amount:    loan.Amount.Float64,
+			Tenure:    loan.Tenure.Int64,
+			Status:    loan.Status.String,
+			CreatedAt: loan.CreatedAt.Time.Format("2006-01-02 15:04:05"),
 		})
 	}
 	response.Message = "successfully fetched user loans"

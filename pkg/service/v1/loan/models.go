@@ -5,9 +5,9 @@ import (
 )
 
 type CreateLoanRequest struct {
-	UserId       int64   `json:"userId" binding:"required"`
-	Amount       float64 `json:"amount" binding:"required"`
-	Installments int64   `json:"installments" binding:"required"`
+	UserId int64   `json:"userId" binding:"required"`
+	Amount float64 `json:"amount" binding:"required"`
+	Tenure int64   `json:"tenure" binding:"required"`
 }
 
 type CreateLoanResponse struct {
@@ -18,14 +18,14 @@ type CreateLoanResponse struct {
 }
 
 type LoanDetails struct {
-	LoanId       int64                `json:"loanId"`
-	UserId       int64                `json:"userId,omitempty"`
-	UserName     string               `json:"username,omitempty"`
-	Amount       float64              `json:"amount,omitempty"`
-	Installments int64                `json:"installments,omitempty"`
-	Status       string               `json:"status"`
-	Details      []InstallmentDetails `json:"details,omitempty"`
-	CreatedAt    string               `json:"createdAt,omitempty"`
+	LoanId    int64                `json:"loanId"`
+	UserId    int64                `json:"userId,omitempty"`
+	UserName  string               `json:"username,omitempty"`
+	Amount    float64              `json:"amount,omitempty"`
+	Tenure    int64                `json:"tenure,omitempty"`
+	Status    string               `json:"status"`
+	Details   []InstallmentDetails `json:"details,omitempty"`
+	CreatedAt string               `json:"createdAt,omitempty"`
 }
 
 type InstallmentDetails struct {
@@ -39,10 +39,10 @@ type InstallmentDetails struct {
 }
 
 type ModifyLoanRequest struct {
-	UserId       int64   `json:"userId" binding:"required"`
-	LoanId       int64   `json:"loanId" binding:"required"`
-	Amount       float64 `json:"amount" binding:"required"`
-	Installments int64   `json:"installments" binding:"required"`
+	UserId int64   `json:"userId" binding:"required"`
+	LoanId int64   `json:"loanId" binding:"required"`
+	Amount float64 `json:"amount" binding:"required"`
+	Tenure int64   `json:"tenure" binding:"required"`
 }
 
 type ModifyLoanResponse struct {
@@ -115,7 +115,7 @@ type GetLoanDetail struct {
 	LoanId            int64                `json:"loanId"`
 	LoanAmount        float64              `json:"loanAmount,omitempty"`
 	OutstandingAmount float64              `json:"outstandingAmount,omitempty"`
-	TotalInstallments int                  `json:"totalInstallments,omitempty"`
+	Tenure            int                  `json:"tenure,omitempty"`
 	Status            string               `json:"status"`
 	Installments      []InstallmentDetails `json:"installments,omitempty"`
 }

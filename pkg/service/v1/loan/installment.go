@@ -38,7 +38,7 @@ func (obj *loanService) GetInstallments(c *gin.Context) {
 	}
 	response.Data = &GetLoanDetail{
 		LoanId:            request.LoanId,
-		TotalInstallments: len(installments),
+		Tenure:            len(installments),
 		LoanAmount:        installments[0].LoanAmount.Float64,
 		OutstandingAmount: installments[0].LoanAmount.Float64,
 		Status:            installments[0].LoanStatus.String,
@@ -152,7 +152,7 @@ func (obj *loanService) ProcessLoanPayment(c *gin.Context) {
 	//update following transactions with adjusted due amount
 	for i := txn + 1; i < len(installments); i++ {
 		installments[i].AmountDue.Float64 = duePerInstallment
-		if loanDue < 0 {
+		if loanDue <= 0 {
 			installments[i].Status.String = TXN_CANCELLED
 		}
 	}

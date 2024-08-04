@@ -16,7 +16,7 @@ func (obj *loanDb) GetUnapprovedLoans(c *gin.Context) ([]UnApprovedLoan, error) 
 			l.id as loan_id,
 			u.user_name,
 			l.amount,
-			l.installments,
+			l.tenure,
 			l.status,
 			l.created_at
 		from
