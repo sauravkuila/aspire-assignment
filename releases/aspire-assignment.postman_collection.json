@@ -1,0 +1,428 @@
+{
+	"info": {
+		"_postman_id": "97681fcb-1173-4b2a-bff6-2330bec3870a",
+		"name": "aspire-assignment",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "V1",
+			"item": [
+				{
+					"name": "Loan",
+					"item": [
+						{
+							"name": "v1 - Loan - Apply Loan",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"amount\":32000,\n\t\"tenure\":6\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/v1/loan",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"loan"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1 - Loan - Modify Loan",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "PUT",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"loanId\":4,\n    \"amount\":30000,\n\t\"tenure\":10\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/v1/loan",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"loan"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1 - Loan - Cancel Loan",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "DELETE",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"loanId\":7\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/v1/loan",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"loan"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1 - Loan - Status",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/v1/loan/status",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"loan",
+										"status"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1 - Loan - Installments",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/v1/loan/installments?loanId=4",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"loan",
+										"installments"
+									],
+									"query": [
+										{
+											"key": "loanId",
+											"value": "4"
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1 - Loan - Repayment",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"loanId\": 4,\n    \"amount\": 9000,\n    \"transactionId\": \"txn4\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/v1/loan/repay",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"loan",
+										"repay"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Admin",
+					"item": [
+						{
+							"name": "v1 - Admin - Unapproved Loans",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "{{host}}/v1/admin/applications",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"admin",
+										"applications"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "v1 - Admin - Approve/Reject Loan",
+							"request": {
+								"auth": {
+									"type": "bearer",
+									"bearer": [
+										{
+											"key": "token",
+											"value": "{{token}}",
+											"type": "string"
+										}
+									]
+								},
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\n    \"loanId\":1,\n    \"approval\":\"REJECT\"\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "{{host}}/v1/admin/update",
+									"host": [
+										"{{host}}"
+									],
+									"path": [
+										"v1",
+										"admin",
+										"update"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Cred",
+			"item": [
+				{
+					"name": "Cred - Login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"pm.test(\"Status code is 200\", () => {",
+									"  pm.expect(pm.response.code).to.be.oneOf([201,202,200]);",
+									"  const responseJson = pm.response.json();",
+									"  token = responseJson.data.token  ",
+									"    pm.collectionVariables.set(\"token\", token);",
+									"});"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"John\",\n    \"password\":\"pass123\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/cred/login",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"cred",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cred - Signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"username\":\"Saurav1\",\n    \"password\":\"pass12345\",\n\t\"type\":\"ADMIN\",\n    \"email\":\"abc@my.com\",\n    \"mobile\":\"+91802134589\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{host}}/cred/signup",
+							"host": [
+								"{{host}}"
+							],
+							"path": [
+								"cred",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Health",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{host}}/health",
+					"host": [
+						"{{host}}"
+					],
+					"path": [
+						"health"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "host",
+			"value": "127.0.0.1:8001",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "",
+			"type": "default"
+		}
+	]
+}
