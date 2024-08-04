@@ -1,9 +1,9 @@
 # aspire-assignment
 The repository provides an application that allows authenticated users to go through a loan application.
 The assignment covers
-    * users applying for loan
-    * admins approving/rejecting loan
-    * users can submit repayments
+* users applying for loan
+* admins approving/rejecting loan
+* users can submit repayments
 There are a few assumptions and borders drawn around the applicaiotn in the interest of time and scoping. 
 
 ## Mandatory Features (as requested by assignment provider)
@@ -46,12 +46,34 @@ run a docer image for postgres
 # \l
 ```
 this should list the newly created database ```aspire```
+connect to database created and execute the ```create.sql``` available in ```pkg/db/sql/create.sql``` path
+```
+# \c aspire;
+# <run contents of> create.sql
+# \d
+```
 
 ### Local Server / Remote Server
 connect to the local / remote server using a client like TablePlus, DBeaver, PostgreSQL.
 execute the following in the SQL editor
 ```
 CREATE DATABASE aspire;
+<run contents of> create.sql
 ```
 
 ---
+
+## Prerequisites
+* run the db schema available in ```pkg/db/sql/create.sql``` path
+* ensure the db details are updated correctly in ```local.yaml``` file in ```releases``` folder
+* keep the ```local.yaml``` in the same folder as the executable
+* go version 1.20 and above is needed to Build the project
+    * clone the project to folder ```aspire-assignment```
+    * run command ```go build -o aspire .``` for mac/linux
+    * run command ```go build -o aspire.exe .``` for windows
+    * run ```./aspire``` or ```aspire.exe```
+    * the console should show a message ```starting router``` which means that the app has successfully started
+* accesible psql database
+
+---
+
