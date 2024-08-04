@@ -25,6 +25,7 @@ There are a few assumptions and borders drawn around the applicaiotn in the inte
 * All loans/installments are tracked when they were created/approved/paid
 * Customer can repay an amount equal or more than scheduled payment and the upcoming scheduled payments are adjusted equally.
 * Customer can close the loan by making greater payments vs the scheduled payment amount
+* API version management put in place for ease of management as product grows
 
 ## Assumptions
 * All loans will be assumed to have weekly payment frequency
@@ -77,3 +78,38 @@ CREATE DATABASE aspire;
 
 ---
 
+## API Endpoints
+The postman collection in ```releases/aspire-assignment.postman_collection.json``` will ensure all APIs are documented with relevant tests to sync tokens in collection variables
+
+* `GET`    /health                   --> health check api. can be used for k8 pod health or circuit breaker
+* `POST`   /cred/signup              --> signup api. works without any auth
+* `POST`   /cred/login               --> login api. works without any auth
+* `POST`   /v1/loan                  --> apply loan api. only authenticated customer can reach this
+* `PUT`    /v1/loan                  --> modify loan api. only authenticated customer can reach this
+* `DELETE` /v1/loan                  --> cancel loan api. only authenticated customer can reach this
+* `GET`    /v1/loan/status           --> get loan status. only authenticated customer can reach this
+* `GET`    /v1/loan/installments     --> get loan installments and their status. only authenticated customer can reach this
+* `POST`   /v1/loan/repay            --> customer scheduled payment api. only authenticated customer can reach this
+* `GET`    /v1/admin/applications    --> lists pending loans. only authenticated admin can reach this
+* `POST`   /v1/admin/update          --> approve/reject pending loans. only authenticated admin can reach this
+
+### Usage
+* Signup using `/cred/signup` and create a username and password as a `CUTOMER` or `ADMIN`
+* Login using `/cred/login` and receive a auth token to be used for all loan APIs
+* Apply for a loan using `/v1/loan`
+* Check loan status using `/v1/loan/status`
+* Login as an `ADMIN` and check if loan application is available for approve/reject using `/v1/admin/applications`
+* As an `ADMIN`, approve the loan using `/v1/admin/update`
+* Login as the initial user and check the loan status using `/v1/loan/status`
+    * If the loan is approved, the loan state will show `APPROVED` and the installments will show as `PENDING` in `/v1/loan/installments`
+    * If the loan is rejected, the loan state will show `REJECTED` and the installments will not show in `/v1/loan/installments`
+* Pay a loan installment using `/v1/loan/repay`
+    * Installment amount less than amount due will not be accepted
+    * installment amount greater than amount due will be accepted and the upcoming payments will be recalculated. the same can be observed with `/v1/loan/installments` after each payment
+    * payments mark the scheduled payment as `PAID`
+    * The loan is marked as `PAID` when the ourstanding amount in `/v1/loan/installments` response becomes 0
+    * If the loan is repayed before scheduled tenure, the remaining payments are marked `CANCELLED`
+
+---
+
+Happy Usage!
