@@ -80,7 +80,7 @@ func (obj *loanDb) CancelLoan(c *gin.Context, userId int64, loanId int64) (int64
 	return id.Int64, nil
 }
 
-func (obj *loanDb) GetAllLoansForAgainstUser(c *gin.Context, userId int64) ([]LoanDetails, error) {
+func (obj *loanDb) GetUserLoans(c *gin.Context, userId int64) ([]LoanDetails, error) {
 	query := `
 		select 
 			id, amount, installments, status, created_at

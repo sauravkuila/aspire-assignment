@@ -51,7 +51,7 @@ func (e *Error) GetErrorDetails(errMsg string) Error {
 	}
 	err := *e
 	if errMsg != "" {
-		err.Description = err.Description + " " + errMsg
+		err.Description = err.Description + " | " + errMsg
 	}
 	return err
 }

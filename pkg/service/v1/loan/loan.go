@@ -150,7 +150,7 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 	//TODO: add custom status like only loans which are pending or cancelled. add a query scan param
 
 	//fetch loans
-	loans, err := obj.dbObj.GetAllLoansForAgainstUser(c, request.UserId)
+	loans, err := obj.dbObj.GetUserLoans(c, request.UserId)
 	if err != nil {
 		log.Printf("failed to fetch loans. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
