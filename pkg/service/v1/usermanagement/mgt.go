@@ -39,13 +39,6 @@ func (obj *userMgtService) UserSignup(c *gin.Context) {
 	}
 	hashedPassword := string(hashedPasswordBytes)
 
-	// err = bcrypt.CompareHashAndPassword([]byte(hashedPassword), []byte(password+"LO"))
-	// if err != nil {
-	// 	fmt.Println("invalid password")
-	// } else {
-	// 	fmt.Println("valid password")
-	// }
-
 	//add the entry into db
 	userDetail := usermanagement.UserDetails{
 		UserName:       sql.NullString{String: request.UserName, Valid: true},
