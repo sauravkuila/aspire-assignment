@@ -14,33 +14,32 @@ func (obj *loanService) GetPendingLoans(c *gin.Context) {
 		request  PendingLoanRequest
 		response PendingLoanResponse
 	)
-	if err := c.BindQuery(&request); err != nil {
-		log.Printf("unable to marshal request. Error:%s", err.Error())
-		response.Errors = append(response.Errors, *e.ErrorInfo[e.BadRequest])
-		response.Message = "failed to fetch loans"
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
+	// if err := c.BindQuery(&request); err != nil {
+	// 	log.Printf("unable to marshal request. Error:%s", err.Error())
+	// 	response.Errors = append(response.Errors, *e.ErrorInfo[e.BadRequest])
+	// 	response.Message = "failed to fetch loans"
+	// 	c.JSON(http.StatusBadRequest, response)
+	// 	return
+	// }
 	request.UserId = c.GetInt64(config.USERID)
 
 	//check if the user is an admin and fetch only pending loans
-	//todo: implement JWT
 	loans, err := obj.dbObj.GetUnapprovedLoans(c)
 	if err != nil {
 		log.Printf("failed to fetch loans. Error:%s", err.Error())
-		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
+		response.Errors = append(response.Errors, *e.ErrorInfo[e.GetDBError])
 		response.Message = "failed to fetch loans"
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
 
-	response.Status = true
 	if len(loans) == 0 {
 		response.Message = "no loans available"
 		c.JSON(http.StatusNotFound, response)
 		return
 	}
 
+	response.Status = true
 	//init loan slice
 	response.Data = make([]LoanDetails, 0)
 	for _, loan := range loans {
@@ -88,7 +87,6 @@ func (obj *loanService) ApproveRejectLoanApplication(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, response)
 		return
 	}
-	log.Println(request)
 
 	if request.Approval == LOAN_REJECT {
 		log.Printf("loan is being rejected by admin. LoanId: %d, Status: %s", request.LoanId, request.Approval)

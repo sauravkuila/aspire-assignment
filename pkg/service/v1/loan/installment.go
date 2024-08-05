@@ -32,12 +32,13 @@ func (obj *loanService) GetInstallments(c *gin.Context) {
 		return
 	}
 
-	response.Status = true
 	if len(installments) == 0 {
 		response.Message = "no installments against loan available"
 		c.JSON(http.StatusNotFound, response)
 		return
 	}
+
+	response.Status = true
 	response.Data = &GetLoanDetail{
 		LoanId:            request.LoanId,
 		Tenure:            len(installments),
