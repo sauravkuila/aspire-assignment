@@ -12,6 +12,7 @@ type dbV1LayerObj struct {
 	usermanagement.DbUserManagementInterface
 }
 
+//go:generate mockgen -destination=mock/mock.go -package=mock aspire-assignment/pkg/db/v1  V1DBLayer
 type V1DBLayer interface {
 	loan.DbLoanInterface
 	usermanagement.DbUserManagementInterface

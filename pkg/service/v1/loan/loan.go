@@ -10,10 +10,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-func (obj *loanService) FuncLoanServiceSample(c *gin.Context) {
-	c.JSON(http.StatusOK, &gin.H{"status": "working"})
-}
-
 func (obj *loanService) CreateLoan(c *gin.Context) {
 	var (
 		request  CreateLoanRequest
@@ -112,9 +108,9 @@ func (obj *loanService) CancelLoan(c *gin.Context) {
 	//cancel the loan if the loan is pending
 	loanId, err := obj.dbObj.CancelLoan(c, request.UserId, request.LoanId)
 	if err != nil {
-		log.Printf("failed to modify a loan. Error:%s", err.Error())
+		log.Printf("failed to cancel a loan. Error:%s", err.Error())
 		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
-		response.Message = "failed to modify loan"
+		response.Message = "failed to cancel loan"
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
@@ -143,13 +139,13 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 		request  GetLoanRequest
 		response GetLoanResponse
 	)
-	if err := c.BindQuery(&request); err != nil {
-		log.Printf("unable to marshal request. Error:%s", err.Error())
-		response.Errors = append(response.Errors, *e.ErrorInfo[e.BadRequest])
-		response.Message = "failed to fetch loans"
-		c.JSON(http.StatusBadRequest, response)
-		return
-	}
+	// if err := c.BindQuery(&request); err != nil {
+	// 	log.Printf("unable to marshal request. Error:%s", err.Error())
+	// 	response.Errors = append(response.Errors, *e.ErrorInfo[e.BadRequest])
+	// 	response.Message = "failed to fetch loans"
+	// 	c.JSON(http.StatusBadRequest, response)
+	// 	return
+	// }
 	request.UserId = c.GetInt64(config.USERID)
 
 	//TODO: add custom status like only loans which are pending or cancelled. add a query scan param
@@ -158,13 +154,12 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 	loans, err := obj.dbObj.GetUserLoans(c, request.UserId)
 	if err != nil {
 		log.Printf("failed to fetch loans. Error:%s", err.Error())
-		response.Errors = append(response.Errors, *e.ErrorInfo[e.AddDBError])
+		response.Errors = append(response.Errors, *e.ErrorInfo[e.GetDBError])
 		response.Message = "failed to fetch loans"
 		c.JSON(http.StatusInternalServerError, response)
 		return
 	}
 
-	response.Status = true
 	if len(loans) == 0 {
 		response.Message = "no loans available for user"
 		c.JSON(http.StatusNotFound, response)
@@ -182,6 +177,7 @@ func (obj *loanService) GetLoans(c *gin.Context) {
 			CreatedAt: loan.CreatedAt.Time.Format("2006-01-02 15:04:05"),
 		})
 	}
+	response.Status = true
 	response.Message = "successfully fetched user loans"
 	c.JSON(http.StatusOK, response)
 }
