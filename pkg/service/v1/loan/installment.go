@@ -110,7 +110,7 @@ func (obj *loanService) ProcessLoanPayment(c *gin.Context) {
 		log.Println("amount payable is less than installment amount")
 		response.Errors = append(response.Errors, e.ErrorInfo[e.BadRequest].GetErrorDetails("amount payable is less than installment amount"))
 		response.Message = "failed to  process payment"
-		c.JSON(http.StatusInternalServerError, response)
+		c.JSON(http.StatusBadRequest, response)
 		return
 	}
 	//mark the current txn as paid

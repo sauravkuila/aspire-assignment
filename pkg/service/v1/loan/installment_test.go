@@ -338,6 +338,369 @@ func Test_loanService_ProcessLoanPayment(t *testing.T) {
 			httpStatus: http.StatusBadRequest,
 			httpMethod: http.MethodPost,
 		},
+		{
+			name: "InvalidInstallmentAmount",
+			input: ProcessLoanPaymentRequest{
+				LoanId:        3,
+				Amount:        2000,
+				TransactionId: "txn2",
+			},
+			setup: func(c *gin.Context, data ProcessLoanPaymentRequest) {
+				ctrl := gomock.NewController(t)
+				repo := dbmock.NewMockV1DBLayer(ctrl)
+				dbObj = repo
+				t1, _ := time.Parse("2006-01-02", "2024-08-08")
+				installments := make([]loan.InstallmentDetails, 2)
+				installments[0] = loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 5000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 1, Valid: true},
+					TransactionId:  sql.NullString{String: "txn1", Valid: true},
+					DueDate:        sql.NullTime{Time: t1, Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				}
+				installments[1] = loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				}
+				repo.EXPECT().GetUserLoanInstallments(c, userId, data.LoanId).Return(installments, nil).Times(1)
+			},
+			expectedOutput: ProcessLoanPaymentResponse{
+				Status: false,
+				Errors: []e.Error{{
+					ErrName:     e.ErrorInfo[e.BadRequest].ErrName,
+					Description: e.ErrorInfo[e.BadRequest].Description,
+					Code:        e.ErrorInfo[e.BadRequest].Code,
+				}},
+				Message: "failed to  process paymente",
+			},
+			httpStatus: http.StatusBadRequest,
+			httpMethod: http.MethodPost,
+		},
+		{
+			name: "InvalidInstallmentAmountGreater",
+			input: ProcessLoanPaymentRequest{
+				LoanId:        3,
+				Amount:        6000,
+				TransactionId: "txn2",
+			},
+			setup: func(c *gin.Context, data ProcessLoanPaymentRequest) {
+				ctrl := gomock.NewController(t)
+				repo := dbmock.NewMockV1DBLayer(ctrl)
+				dbObj = repo
+				t1, _ := time.Parse("2006-01-02", "2024-08-08")
+				installments := make([]loan.InstallmentDetails, 2)
+				installments[0] = loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 5000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 1, Valid: true},
+					TransactionId:  sql.NullString{String: "txn1", Valid: true},
+					DueDate:        sql.NullTime{Time: t1, Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				}
+				installments[1] = loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				}
+				repo.EXPECT().GetUserLoanInstallments(c, userId, data.LoanId).Return(installments, nil).Times(1)
+			},
+			expectedOutput: ProcessLoanPaymentResponse{
+				Status: false,
+				Errors: []e.Error{{
+					ErrName:     e.ErrorInfo[e.BadRequest].ErrName,
+					Description: e.ErrorInfo[e.BadRequest].Description,
+					Code:        e.ErrorInfo[e.BadRequest].Code,
+				}},
+				Message: "failed to  process paymente",
+			},
+			httpStatus: http.StatusNotAcceptable,
+			httpMethod: http.MethodPost,
+		},
+		{
+			name: "SingleInstallmentUpdateError",
+			input: ProcessLoanPaymentRequest{
+				LoanId:        3,
+				Amount:        5000,
+				TransactionId: "txn2",
+			},
+			setup: func(c *gin.Context, data ProcessLoanPaymentRequest) {
+				ctrl := gomock.NewController(t)
+				repo := dbmock.NewMockV1DBLayer(ctrl)
+				dbObj = repo
+				t1, _ := time.Parse("2006-01-02", "2024-08-08")
+				installments := make([]loan.InstallmentDetails, 0)
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 5000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 1, Valid: true},
+					TransactionId:  sql.NullString{String: "txn1", Valid: true},
+					DueDate:        sql.NullTime{Time: t1, Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				repo.EXPECT().GetUserLoanInstallments(c, userId, data.LoanId).Return(installments, nil).Times(1)
+				repo.EXPECT().UpdateSingleInstallmentPayment(c, data.LoanId, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 5000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				}, true).Return(fmt.Errorf("db error")).Times(1)
+			},
+			expectedOutput: ProcessLoanPaymentResponse{
+				Status: false,
+				Errors: []e.Error{{
+					ErrName:     e.ErrorInfo[e.AddDBError].ErrName,
+					Description: e.ErrorInfo[e.AddDBError].Description,
+					Code:        e.ErrorInfo[e.AddDBError].Code,
+				}},
+				Message: "failed to  process paymente",
+			},
+			httpStatus: http.StatusInternalServerError,
+			httpMethod: http.MethodPost,
+		},
+		{
+			name: "SingleInstallmentUpdateSuccess",
+			input: ProcessLoanPaymentRequest{
+				LoanId:        3,
+				Amount:        5000,
+				TransactionId: "txn2",
+			},
+			setup: func(c *gin.Context, data ProcessLoanPaymentRequest) {
+				ctrl := gomock.NewController(t)
+				repo := dbmock.NewMockV1DBLayer(ctrl)
+				dbObj = repo
+				t1, _ := time.Parse("2006-01-02", "2024-08-08")
+				installments := make([]loan.InstallmentDetails, 0)
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 5000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 1, Valid: true},
+					TransactionId:  sql.NullString{String: "txn1", Valid: true},
+					DueDate:        sql.NullTime{Time: t1, Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				repo.EXPECT().GetUserLoanInstallments(c, userId, data.LoanId).Return(installments, nil).Times(1)
+				repo.EXPECT().UpdateSingleInstallmentPayment(c, data.LoanId, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 5000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 5000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 10000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				}, true).Return(nil).Times(1)
+			},
+			expectedOutput: ProcessLoanPaymentResponse{
+				Status: true,
+				// Errors: []e.Error{{
+				// 	ErrName:     e.ErrorInfo[e.AddDBError].ErrName,
+				// 	Description: e.ErrorInfo[e.AddDBError].Description,
+				// 	Code:        e.ErrorInfo[e.AddDBError].Code,
+				// }},
+				Message: "successfully processed payment",
+			},
+			httpStatus: http.StatusOK,
+			httpMethod: http.MethodPost,
+		},
+		{
+			name: "MultipleInstallmentUpdateError",
+			input: ProcessLoanPaymentRequest{
+				LoanId:        3,
+				Amount:        10000,
+				TransactionId: "txn2",
+			},
+			setup: func(c *gin.Context, data ProcessLoanPaymentRequest) {
+				ctrl := gomock.NewController(t)
+				repo := dbmock.NewMockV1DBLayer(ctrl)
+				dbObj = repo
+				t1, _ := time.Parse("2006-01-02", "2024-08-08")
+				installments := make([]loan.InstallmentDetails, 0)
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 7000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 1, Valid: true},
+					TransactionId:  sql.NullString{String: "txn1", Valid: true},
+					DueDate:        sql.NullTime{Time: t1, Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 3, Valid: true},
+					TransactionId:  sql.NullString{String: "txn3", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * 2 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				repo.EXPECT().GetUserLoanInstallments(c, userId, data.LoanId).Return(installments, nil).Times(1)
+
+				updatedInstallments := make([]loan.InstallmentDetails, 0)
+				updatedInstallments = append(updatedInstallments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 10000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				updatedInstallments = append(updatedInstallments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 4000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 3, Valid: true},
+					TransactionId:  sql.NullString{String: "txn3", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * 2 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				repo.EXPECT().UpdateInstallment(c, data.LoanId, updatedInstallments, false).Return(fmt.Errorf("db error")).Times(1)
+			},
+			expectedOutput: ProcessLoanPaymentResponse{
+				Status: false,
+				Errors: []e.Error{{
+					ErrName:     e.ErrorInfo[e.AddDBError].ErrName,
+					Description: e.ErrorInfo[e.AddDBError].Description,
+					Code:        e.ErrorInfo[e.AddDBError].Code,
+				}},
+				Message: "failed to  process paymente",
+			},
+			httpStatus: http.StatusInternalServerError,
+			httpMethod: http.MethodPost,
+		},
+		{
+			name: "MultipleInstallmentUpdateSuccess",
+			input: ProcessLoanPaymentRequest{
+				LoanId:        3,
+				Amount:        10000,
+				TransactionId: "txn2",
+			},
+			setup: func(c *gin.Context, data ProcessLoanPaymentRequest) {
+				ctrl := gomock.NewController(t)
+				repo := dbmock.NewMockV1DBLayer(ctrl)
+				dbObj = repo
+				t1, _ := time.Parse("2006-01-02", "2024-08-08")
+				installments := make([]loan.InstallmentDetails, 0)
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 7000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 1, Valid: true},
+					TransactionId:  sql.NullString{String: "txn1", Valid: true},
+					DueDate:        sql.NullTime{Time: t1, Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				installments = append(installments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 3, Valid: true},
+					TransactionId:  sql.NullString{String: "txn3", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * 2 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				repo.EXPECT().GetUserLoanInstallments(c, userId, data.LoanId).Return(installments, nil).Times(1)
+
+				updatedInstallments := make([]loan.InstallmentDetails, 0)
+				updatedInstallments = append(updatedInstallments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 7000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 10000, Valid: true},
+					Status:         sql.NullString{String: TXN_PAID, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 2, Valid: true},
+					TransactionId:  sql.NullString{String: "txn2", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				updatedInstallments = append(updatedInstallments, loan.InstallmentDetails{
+					AmountDue:      sql.NullFloat64{Float64: 4000, Valid: true},
+					AmountPaid:     sql.NullFloat64{Float64: 0, Valid: true},
+					Status:         sql.NullString{String: TXN_PENDING, Valid: true},
+					InstallmentSeq: sql.NullInt64{Int64: 3, Valid: true},
+					TransactionId:  sql.NullString{String: "txn3", Valid: true},
+					DueDate:        sql.NullTime{Time: t1.Add(24 * 7 * 2 * time.Hour), Valid: true},
+					LoanAmount:     sql.NullFloat64{Float64: 21000, Valid: true},
+					LoanStatus:     sql.NullString{String: LOAN_APPROVED, Valid: true},
+				})
+				repo.EXPECT().UpdateInstallment(c, data.LoanId, updatedInstallments, false).Return(nil).Times(1)
+			},
+			expectedOutput: ProcessLoanPaymentResponse{
+				Status:  true,
+				Message: "successfully processed payment",
+			},
+			httpStatus: http.StatusOK,
+			httpMethod: http.MethodPost,
+		},
 	}
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
